@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>543</width>
-    <height>408</height>
+    <width>777</width>
+    <height>458</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,13 +19,41 @@
      <rect>
       <x>16</x>
       <y>12</y>
-      <width>511</width>
-      <height>381</height>
+      <width>581</width>
+      <height>411</height>
      </rect>
     </property>
     <property name="text">
      <string/>
     </property>
+   </widget>
+   <widget class="QComboBox" name="map_type">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>20</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 16pt &quot;MS Reference Sans Serif&quot;;</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Схема</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Спутник</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Гибрид</string>
+     </property>
+    </item>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

@@ -17,6 +17,8 @@ class MapWidget(QMainWindow):
         uic.loadUi('interface.ui', self)
         self.coords = coords
         self.scale = scale
+        self.type_of_map = 'map'
+        self.map_type.currentTextChanged.connect(self.change_map)
         self.initUI()
 
     def initUI(self):
@@ -27,7 +29,7 @@ class MapWidget(QMainWindow):
     def update_picture(self):
         map_params = {
             "ll": ",".join(map(lambda x: str(x), self.coords)),
-            "l": "map",
+            "l": self.type_of_map,
             "spn": '1,1',
             "scale": self.scale
 
@@ -78,6 +80,17 @@ class MapWidget(QMainWindow):
             if self.coords[1] < 0:
                 self.coords[1] = 0
             self.update_picture()
+
+    def change_map(self):
+        text = self.map_type.currentText()
+        if text == 'Схема':
+            self.type_of_map = 'map'
+        elif text == 'Спутник':
+            self.type_of_map = 'sat'
+        elif text == 'Гибрид':
+            self.type_of_map = 'sat,skl'
+        self.update_picture()
+
 
 
 if __name__ == '__main__':
