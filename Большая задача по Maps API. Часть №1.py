@@ -19,6 +19,7 @@ class MapWidget(QMainWindow):
         self.scale = scale
         self.type_of_map = 'map'
         self.map_type.currentTextChanged.connect(self.change_map)
+        self.search_button.clicked.connect(self.search_place)
         self.initUI()
 
     def initUI(self):
@@ -58,25 +59,25 @@ class MapWidget(QMainWindow):
 
             self.update_picture()
         if event.key() == Qt.Key_Right:
-            self.coords[0] += 0.25 / self.scale
+            self.coords[0] += 0.25 / float(self.scale)
             if self.coords[0] > 180:
                 self.coords[0] = 180
             self.update_picture()
 
         if event.key() == Qt.Key_Left:
-            self.coords[0] -= 0.25 / self.scale
+            self.coords[0] -= 0.25 / float(self.scale)
             if self.coords[0] < 0:
                 self.coords[0] = 0
             self.update_picture()
 
         if event.key() == Qt.Key_Up:
-            self.coords[1] += 0.25 / self.scale
+            self.coords[1] += 0.25 / float(self.scale)
             if self.coords[1] > 90:
                 self.coords[1] = 90
             self.update_picture()
 
         if event.key() == Qt.Key_Down:
-            self.coords[1] -= 0.25 / self.scale
+            self.coords[1] -= 0.25 / float(self.scale)
             if self.coords[1] < 0:
                 self.coords[1] = 0
             self.update_picture()
@@ -89,6 +90,29 @@ class MapWidget(QMainWindow):
             self.type_of_map = 'sat'
         elif text == 'Гибрид':
             self.type_of_map = 'sat,skl'
+        self.update_picture()
+
+    def get_coords(self, name):
+        geocoder_request = f"http://geocode-maps.yandex.ru/1.x"
+        geo_params = {'apikey': '40d1649f-0493-4b70-98ba-98533de7710b',
+                      'geocode': name,
+                      'format': 'json'}
+
+        response = requests.get(geocoder_request, params=geo_params)
+        if response:
+            json_response = response.json()
+            toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0][
+                "GeoObject"]
+            coordinates = toponym["Point"]["pos"]
+
+            return coordinates
+
+    def search_place(self):
+        name_of_place = self.search_line.text()
+        self.search_line.setEnabled(False)
+        self.search_line.setEnabled(True)
+        coords = self.get_coords(name_of_place).split(' ')
+        self.coords = list(map(lambda x: float(x), coords))
         self.update_picture()
 
 

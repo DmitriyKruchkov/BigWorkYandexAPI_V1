@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>777</width>
+    <width>827</width>
     <height>458</height>
    </rect>
   </property>
@@ -30,11 +30,14 @@
    <widget class="QComboBox" name="map_type">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>20</y>
+      <x>630</x>
+      <y>380</y>
       <width>141</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">font: 16pt &quot;MS Reference Sans Serif&quot;;</string>
@@ -54,6 +57,38 @@
       <string>Гибрид</string>
      </property>
     </item>
+   </widget>
+   <widget class="QLineEdit" name="search_line">
+    <property name="geometry">
+     <rect>
+      <x>622</x>
+      <y>19</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::ClickFocus</enum>
+    </property>
+    <property name="acceptDrops">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="search_button">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>60</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="text">
+     <string>Искать</string>
+    </property>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
