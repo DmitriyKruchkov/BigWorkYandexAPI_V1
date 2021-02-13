@@ -7,7 +7,7 @@ from PyQt5 import uic
 import requests
 from PyQt5.QtCore import Qt
 
-COORDS = (37.6155600, 55.7522200)
+COORDS = [37.6155600, 55.7522200]
 SCALE = 1.0
 
 
@@ -44,17 +44,41 @@ class MapWidget(QMainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_PageDown:
-            self.scale -= 1
+            self.scale -= 0.5
             if self.scale < 1:
                 self.scale = 1
 
             self.update_picture()
         if event.key() == Qt.Key_PageUp:
-            self.scale += 1
+            self.scale += 0.5
             if self.scale > 4:
                 self.scale = 4
 
             self.update_picture()
+        if event.key() == Qt.Key_Right:
+            self.coords[0] += 0.25 / self.scale
+            if self.coords[0] > 180:
+                self.coords[0] = 180
+            self.update_picture()
+
+        if event.key() == Qt.Key_Left:
+            self.coords[0] -= 0.25 / self.scale
+            if self.coords[0] < 0:
+                self.coords[0] = 0
+            self.update_picture()
+
+        if event.key() == Qt.Key_Up:
+            self.coords[1] += 0.25 / self.scale
+            if self.coords[1] > 90:
+                self.coords[1] = 90
+            self.update_picture()
+
+        if event.key() == Qt.Key_Down:
+            self.coords[1] -= 0.25 / self.scale
+            if self.coords[1] < 0:
+                self.coords[1] = 0
+            self.update_picture()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
