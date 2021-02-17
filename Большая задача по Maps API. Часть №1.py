@@ -18,9 +18,11 @@ class MapWidget(QMainWindow):
         self.coords = coords
         self.scale = scale
         self.mark = coords[:]
+        self.mark_is_exist = True
         self.type_of_map = 'map'
         self.map_type.currentTextChanged.connect(self.change_map)
         self.search_button.clicked.connect(self.search_place)
+        self.reset_button.clicked.connect(self.reset_mark)
         self.initUI()
 
     def initUI(self):
@@ -34,9 +36,9 @@ class MapWidget(QMainWindow):
             "l": self.type_of_map,
             "spn": '1,1',
             "scale": self.scale,
-            "pt": ",".join(map(lambda x: str(x), self.mark)) + ',pm2rdl'
-
         }
+        if self.mark_is_exist:
+            map_params["pt"] = ",".join(map(lambda x: str(x), self.mark)) + ',pm2rdl'
         map_api_server = "http://static-maps.yandex.ru/1.x/"
         response = requests.get(map_api_server, params=map_params)
         if response:
@@ -115,9 +117,13 @@ class MapWidget(QMainWindow):
         self.search_line.setEnabled(True)
         coords = self.get_coords(name_of_place).split(' ')
         self.coords = list(map(lambda x: float(x), coords))
+        self.mark_is_exist = True
         self.mark = coords[:]
         self.update_picture()
 
+    def reset_mark(self):
+        self.mark_is_exist = False
+        self.update_picture()
 
 
 

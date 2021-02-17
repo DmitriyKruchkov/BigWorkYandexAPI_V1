@@ -31,7 +31,7 @@
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>380</y>
+      <y>390</y>
       <width>141</width>
       <height>41</height>
      </rect>
@@ -88,6 +88,22 @@
     </property>
     <property name="text">
      <string>Искать</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="reset_button">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>110</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+    <property name="text">
+     <string>Сброс поискового результата</string>
     </property>
    </widget>
   </widget>
