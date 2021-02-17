@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>827</width>
-    <height>458</height>
+    <height>506</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -104,6 +104,32 @@
     </property>
     <property name="text">
      <string>Сброс поискового результата</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="address_line">
+    <property name="geometry">
+     <rect>
+      <x>12</x>
+      <y>459</y>
+      <width>611</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>430</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Полный адрес:</string>
     </property>
    </widget>
   </widget>

@@ -18,8 +18,9 @@ class MapWidget(QMainWindow):
         self.coords = coords
         self.scale = scale
         self.mark = coords[:]
-        self.mark_is_exist = True
+        self.mark_is_exist = False
         self.type_of_map = 'map'
+        self.address = []
         self.map_type.currentTextChanged.connect(self.change_map)
         self.search_button.clicked.connect(self.search_place)
         self.reset_button.clicked.connect(self.reset_mark)
@@ -39,6 +40,7 @@ class MapWidget(QMainWindow):
         }
         if self.mark_is_exist:
             map_params["pt"] = ",".join(map(lambda x: str(x), self.mark)) + ',pm2rdl'
+
         map_api_server = "http://static-maps.yandex.ru/1.x/"
         response = requests.get(map_api_server, params=map_params)
         if response:
@@ -119,11 +121,35 @@ class MapWidget(QMainWindow):
         self.coords = list(map(lambda x: float(x), coords))
         self.mark_is_exist = True
         self.mark = coords[:]
+        self.address = self.get_address()
+        if len(self.address) == 2:
+            self.address_line.setText(f'{self.address[0]}, {self.address[1]}')
+        else:
+            self.address_line.setText(self.address[0])
         self.update_picture()
 
     def reset_mark(self):
         self.mark_is_exist = False
+        self.address_line.setText('')
         self.update_picture()
+
+    def get_address(self):
+        params = {
+            'apikey': "40d1649f-0493-4b70-98ba-98533de7710b",
+            'geocode': ",".join(map(lambda x: str(x), self.mark)),
+            'format': 'json'
+        }
+        zapros = requests.get('https://geocode-maps.yandex.ru/1.x/', params=params)
+        json_response = zapros.json()
+        toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+        text = toponym['metaDataProperty']['GeocoderMetaData']['text']
+        address = toponym['metaDataProperty']['GeocoderMetaData']['Address']
+        if 'postal_code' in address:
+            postal_code = toponym['metaDataProperty']['GeocoderMetaData']['Address']['postal_code']
+            return [text, postal_code]
+        else:
+            return [text]
+
 
 
 
