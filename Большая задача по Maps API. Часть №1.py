@@ -9,6 +9,12 @@ from PyQt5.QtCore import Qt
 
 COORDS = [37.6155600, 55.7522200]
 SCALE = 1.0
+MAP_X = 16
+MAP_Y = 12
+MAP_WIDTH = 581
+MAP_HEIGHT = 411
+TYPE_OF_MAP = 'map'
+DELTA_MAP = '1,1'
 
 
 class MapWidget(QMainWindow):
@@ -19,11 +25,13 @@ class MapWidget(QMainWindow):
         self.scale = scale
         self.mark = coords[:]
         self.mark_is_exist = False
-        self.type_of_map = 'map'
+        self.type_of_map = TYPE_OF_MAP
+        self.postal_code_exist = False
         self.address = []
         self.map_type.currentTextChanged.connect(self.change_map)
         self.search_button.clicked.connect(self.search_place)
         self.reset_button.clicked.connect(self.reset_mark)
+        self.postal_button.clicked.connect(self.change_postal_code)
         self.initUI()
 
     def initUI(self):
@@ -35,7 +43,7 @@ class MapWidget(QMainWindow):
         map_params = {
             "ll": ",".join(map(lambda x: str(x), self.coords)),
             "l": self.type_of_map,
-            "spn": '1,1',
+            "spn": DELTA_MAP,
             "scale": self.scale,
         }
         if self.mark_is_exist:
@@ -88,6 +96,26 @@ class MapWidget(QMainWindow):
                 self.coords[1] = 0
             self.update_picture()
 
+    def mousePressEvent(self, event):
+        if event.x() > MAP_X and event.x() < MAP_X + MAP_WIDTH and \
+                event.y() > MAP_Y and event.y() < MAP_Y + MAP_HEIGHT:
+            if event.button() == Qt.LeftButton:
+                new_x = (int(DELTA_MAP.split(',')[0]) * (
+                        (event.x() - MAP_X - (MAP_WIDTH // 2)) / (MAP_WIDTH + MAP_X))) / self.scale
+                new_y = int(DELTA_MAP.split(',')[1]) * (
+                        (event.y() - MAP_Y - (MAP_HEIGHT // 2)) / (MAP_HEIGHT + MAP_Y)) / self.scale
+
+                print(new_x)
+                print(new_y)
+                self.mark_is_exist = True
+                self.mark = [self.coords[0] + new_x, self.coords[1] + new_y]
+                self.address = self.get_address()
+                if len(self.address) == 2 and self.postal_code_exist:
+                    self.address_line.setText(f'{self.address[0]}, {self.address[1]}')
+                else:
+                    self.address_line.setText(self.address[0])
+                self.update_picture()
+
     def change_map(self):
         text = self.map_type.currentText()
         if text == 'Схема':
@@ -122,7 +150,7 @@ class MapWidget(QMainWindow):
         self.mark_is_exist = True
         self.mark = coords[:]
         self.address = self.get_address()
-        if len(self.address) == 2:
+        if len(self.address) == 2 and self.postal_code_exist:
             self.address_line.setText(f'{self.address[0]}, {self.address[1]}')
         else:
             self.address_line.setText(self.address[0])
@@ -150,7 +178,16 @@ class MapWidget(QMainWindow):
         else:
             return [text]
 
-
+    def change_postal_code(self):
+        if self.postal_code_exist:
+            self.postal_code_exist = False
+            self.address_line.setText(self.address[0])
+        else:
+            self.postal_code_exist = True
+            if len(self.address) == 2:
+                self.address_line.setText(f'{self.address[0]}, {self.address[1]}')
+            else:
+                self.address_line.setText(self.address[0])
 
 
 if __name__ == '__main__':

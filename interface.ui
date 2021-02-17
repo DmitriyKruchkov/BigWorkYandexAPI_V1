@@ -132,6 +132,19 @@
      <string>Полный адрес:</string>
     </property>
    </widget>
+   <widget class="QRadioButton" name="postal_button">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>430</y>
+      <width>261</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Адрес с почтовым индексом (по возможности)</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
