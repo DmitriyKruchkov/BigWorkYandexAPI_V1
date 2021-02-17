@@ -17,6 +17,7 @@ class MapWidget(QMainWindow):
         uic.loadUi('interface.ui', self)
         self.coords = coords
         self.scale = scale
+        self.mark = coords[:]
         self.type_of_map = 'map'
         self.map_type.currentTextChanged.connect(self.change_map)
         self.search_button.clicked.connect(self.search_place)
@@ -32,7 +33,8 @@ class MapWidget(QMainWindow):
             "ll": ",".join(map(lambda x: str(x), self.coords)),
             "l": self.type_of_map,
             "spn": '1,1',
-            "scale": self.scale
+            "scale": self.scale,
+            "pt": ",".join(map(lambda x: str(x), self.mark)) + ',pm2rdl'
 
         }
         map_api_server = "http://static-maps.yandex.ru/1.x/"
@@ -113,7 +115,9 @@ class MapWidget(QMainWindow):
         self.search_line.setEnabled(True)
         coords = self.get_coords(name_of_place).split(' ')
         self.coords = list(map(lambda x: float(x), coords))
+        self.mark = coords[:]
         self.update_picture()
+
 
 
 
