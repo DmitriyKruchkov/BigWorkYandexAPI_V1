@@ -11,8 +11,8 @@ COORDS = [37.6155600, 55.7522200]
 SCALE = 1.0
 MAP_X = 16
 MAP_Y = 12
-MAP_WIDTH = 581
-MAP_HEIGHT = 411
+MAP_WIDTH = 600
+MAP_HEIGHT = 400
 TYPE_OF_MAP = 'map'
 DELTA_MAP = '1,1'
 
@@ -45,6 +45,7 @@ class MapWidget(QMainWindow):
             "l": self.type_of_map,
             "spn": DELTA_MAP,
             "scale": self.scale,
+            "size": f'{MAP_WIDTH},{MAP_HEIGHT}'
         }
         if self.mark_is_exist:
             map_params["pt"] = ",".join(map(lambda x: str(x), self.mark)) + ',pm2rdl'
@@ -99,16 +100,19 @@ class MapWidget(QMainWindow):
     def mousePressEvent(self, event):
         if event.x() > MAP_X and event.x() < MAP_X + MAP_WIDTH and \
                 event.y() > MAP_Y and event.y() < MAP_Y + MAP_HEIGHT:
-            if event.button() == Qt.LeftButton:
-                new_x = (int(DELTA_MAP.split(',')[0]) * (
-                        (event.x() - MAP_X - (MAP_WIDTH // 2)) / (MAP_WIDTH + MAP_X))) / self.scale
-                new_y = int(DELTA_MAP.split(',')[1]) * (
-                        (event.y() - MAP_Y - (MAP_HEIGHT // 2)) / (MAP_HEIGHT + MAP_Y)) / self.scale
 
+            if event.button() == Qt.LeftButton:
+
+                new_x = (event.x() - MAP_X - MAP_WIDTH // 2) / MAP_WIDTH
+                new_y = (event.y() - MAP_Y - MAP_HEIGHT // 2) / MAP_HEIGHT
+                print(self.coords)
+                print('x')
                 print(new_x)
+                print('y')
                 print(new_y)
+                print('___')
                 self.mark_is_exist = True
-                self.mark = [self.coords[0] + new_x, self.coords[1] + new_y]
+                self.mark = [self.coords[0], self.coords[1]]
                 self.address = self.get_address()
                 if len(self.address) == 2 and self.postal_code_exist:
                     self.address_line.setText(f'{self.address[0]}, {self.address[1]}')
@@ -135,17 +139,22 @@ class MapWidget(QMainWindow):
         response = requests.get(geocoder_request, params=geo_params)
         if response:
             json_response = response.json()
-            toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0][
-                "GeoObject"]
-            coordinates = toponym["Point"]["pos"]
-
-            return coordinates
+            toponym = json_response["response"]["GeoObjectCollection"]["featureMember"]
+            if toponym:
+                toponym = toponym[0]["GeoObject"]
+                coordinates = toponym["Point"]["pos"]
+                return coordinates
+            else:
+                return 0
 
     def search_place(self):
         name_of_place = self.search_line.text()
         self.search_line.setEnabled(False)
         self.search_line.setEnabled(True)
-        coords = self.get_coords(name_of_place).split(' ')
+        coords = self.get_coords(name_of_place)
+        if not coords:
+            return 0
+        coords = coords.split(' ')
         self.coords = list(map(lambda x: float(x), coords))
         self.mark_is_exist = True
         self.mark = coords[:]
